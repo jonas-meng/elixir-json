@@ -39,6 +39,7 @@ defmodule JSON.Parser.Array do
     Logger.debug("#{__MODULE__}.parse(<<>>) unexpected end of buffer.")
     {:error, :unexpected_end_of_buffer}
   end
+
   def parse(json) do
     Logger.debug("#{__MODULE__}.parse(<<>>) unexpected token: #{inspect json}")
     {:error, {:unexpected_token, json}}
