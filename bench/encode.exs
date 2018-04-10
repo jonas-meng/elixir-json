@@ -32,7 +32,7 @@ end
 
 
 Benchee.run(encode_jobs,
-  parallel: 4,
+  parallel: 2,
   warmup: 5,
   time: 30,
   inputs: for name <- encode_inputs, into: %{} do
