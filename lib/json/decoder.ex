@@ -55,6 +55,27 @@ defmodule JSON.Decoder.DefaultImplementations do
                  Logger.error("#{__MODULE__}.decode(#{inspect bitstring}} failed consume entire buffer: #{rest}")
                  {:error, {:unexpected_token, rest}}
              end
+           stream  = %Stream{enum: chunk, funs: funs} ->
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} received stream #{inspect stream}")
+             #run = Stream.run(stream)
+             run =  Enum.each(funs, fn(func) ->
+               Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} checking = #{inspect(func)}")
+               res = func.(chunk)
+               more_res = res.(:foo, :bar)
+               Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} checking = #{inspect(func)} = MORE_Res #{inspect more_res}")
+               Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} calling decode(#{chunk})")
+               decode(chunk)
+             end)
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} run result = #{inspect(run)}")
+
+             err = {:error, :stream_not_implemented}
+             Logger.error("#{__MODULE__}.decode(#{inspect bitstring}) returning #{inspect err}")
+             err
+           other ->
+             Logger.error("#{__MODULE__}.decode(#{inspect bitstring}) received unexpected result from parse: #{inspect other}")
+             err = {:error, {:unexpected_token, other}}
+             Logger.error("#{__MODULE__}.decode(#{inspect bitstring}) returning #{inspect err}")
+             err
          end
     end
   end
