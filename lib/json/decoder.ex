@@ -42,11 +42,11 @@ defmodule JSON.Decoder.DefaultImplementations do
       |> Parser.parse()
       |> case do
            {:error, error_info} ->
-              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} failed with errror: #{inspect error_info}")
-              {:error, error_info}
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} failed with errror: #{inspect error_info}")
+             {:error, error_info}
            {:ok, value, rest} ->
              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) trimming remainder of JSON payload #{inspect rest}...")
-             case rest |> String.trim() do
+             rest |> String.trim() |> case do
                <<>> ->
                  Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) successfully trimmed remainder JSON payload!")
                  Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) returning {:ok. #{inspect value}}")

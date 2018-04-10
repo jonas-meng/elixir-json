@@ -4,6 +4,7 @@ defmodule JSON.Parser.Object do
   """
 
   alias JSON.Parser, as: Parser
+  alias Parser.String, as: StringParser
 
   @doc """
   parses a valid JSON object value, returns its elixir representation
@@ -39,7 +40,7 @@ defmodule JSON.Parser.Object do
 
   # Object Parsing
   defp parse_object_key(json) do
-    case Parser.String.parse(json) do
+    json |> StringParser.parse() |> case do
       {:error, error_info} -> {:error, error_info}
       {:ok, key, after_key} ->
         case String.trim(after_key) do
@@ -54,12 +55,12 @@ defmodule JSON.Parser.Object do
   end
 
   defp parse_object_value(acc, key, after_key) do
-    case Parser.parse(after_key) do
-      {:error, error_info} ->
-        {:error, error_info}
+    after_key |> Parser.parse() |> case do
+      {:error, error_info} -> {:error, error_info}
       {:ok, value, after_value} ->
         acc = Map.put(acc, key, value)
-        after_value |> String.trim() |>
+        after_value |>
+          String.trim() |>
           case do
             <<?,, after_comma::binary>> ->
               parse_object_contents(acc, String.trim(after_comma))
