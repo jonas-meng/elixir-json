@@ -61,7 +61,8 @@ defmodule JSON.Decoder.DefaultImplementations do
              run =  Enum.each(funs, fn(func) ->
                Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} checking = #{inspect(func)}")
                res = func.(chunk)
-               more_res = res.(:foo, :bar)
+               Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} got res from func(chunk)=#{inspect res}")
+               more_res = res.("test", "bar")
                Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} checking = #{inspect(func)} = MORE_Res #{inspect more_res}")
                Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} calling decode(#{chunk})")
                decode(chunk)
@@ -103,7 +104,19 @@ defmodule JSON.Decoder.DefaultImplementations do
 
     """
     def decode(charlist) do
-      charlist |> to_string() |> Decoder.decode()
+      charlist |> to_string() |> Decoder.decode() |>
+        case do
+          {:ok, value} -> {:ok, value}
+          {:error, error_info} when is_binary(error_info)  ->
+            Logger.error("#{__MODULE__}.decode(#{inspect charlist}} failed with errror: #{inspect error_info}")
+            {:error, error_info |> to_charlist()}
+          {:error, {:unexpected_token, bin}} when is_binary(bin)  ->
+            Logger.error("#{__MODULE__}.decode(#{inspect charlist}} failed with errror: #{inspect bin}")
+            {:error, {:unexpected_token, bin |> to_charlist()}}
+          e = {:error, error_info} ->
+            Logger.error("#{__MODULE__}.decode(#{inspect charlist}} failed with errror: #{inspect e}")
+            {:error, error_info}
+        end
     end
   end
 end
