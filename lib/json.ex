@@ -7,8 +7,7 @@ defmodule JSON do
 
   alias JSON.Encoder, as: Encoder
   alias JSON.Decoder, as: Decoder
-
-  @vsn "2.0.0-SNAPSHOT"
+  
 
   @doc """
   Returns a JSON string representation of the Elixir term
