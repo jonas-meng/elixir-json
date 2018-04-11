@@ -41,7 +41,7 @@ defmodule JSON.Parser.Array do
   end
 
   def parse(json) do
-    Logger.debug("#{__MODULE__}.parse(<<>>) unexpected token: #{inspect json}")
+    Logger.debug("#{__MODULE__}.parse(json) unexpected token: #{inspect json}")
     {:error, {:unexpected_token, json}}
   end
 
@@ -80,7 +80,7 @@ defmodule JSON.Parser.Array do
             rest ->
               Logger.debug("#{__MODULE__}.parse_array_contents(acc, json) continuing parsing of #{inspect rest}")
               parse_array_contents([value | acc], rest)
-         end
+          end
     end
   end
 end
