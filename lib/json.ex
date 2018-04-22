@@ -55,7 +55,7 @@ defmodule JSON do
          Logger.debug("#{__MODULE__}.decode(#{inspect bitstring_or_char_list}} was sucesfull: #{inspect res}")
          res
        e = {:error, {:unexpected_token, tok}} ->
-         Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} unexpected token #{tok}")
+         Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} unexpected token #{inspect tok}")
          e
        e = {:error, :unexpected_end_of_buffer} ->
          Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} end of buffer")
@@ -80,7 +80,7 @@ defmodule JSON do
     bitstring_or_char_list |> decode() |> case do
       {:ok, value} -> value
       {:error, {:unexpected_token, tok}} ->
-        Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} unexpected token #{tok}")
+        Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} unexpected token #{inspect tok}")
         raise JSON.Decoder.UnexpectedTokenError, token: tok
       {:error, :unexpected_end_of_buffer} ->
         Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} end of buffer")
