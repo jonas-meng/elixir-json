@@ -32,7 +32,7 @@ defmodule JSON do
   """
   @spec encode!(term) :: bitstring
   def encode!(term) do
-    case Encoder.encode(term) do
+    term |> Encoder.encode() |> case do
       {:ok, value} -> value
       {:error, error_info} -> raise JSON.Encoder.Error, error_info: error_info
       _ -> raise JSON.Encoder.Error
@@ -50,7 +50,7 @@ defmodule JSON do
   @spec decode(bitstring) :: {atom, term}
   @spec decode(charlist) :: {atom, term}
   def decode(bitstring_or_char_list) do
-    case bitstring_or_char_list |> Decoder.decode()  do
+    bitstring_or_char_list |> Decoder.decode() |> case do
        res = {:ok, _} ->
          Logger.debug("#{__MODULE__}.decode(#{inspect bitstring_or_char_list}} was sucesfull: #{inspect res}")
          res
@@ -77,7 +77,7 @@ defmodule JSON do
   @spec decode!(bitstring) :: term
   @spec decode!(charlist) :: term
   def decode!(bitstring_or_char_list) do
-    case decode(bitstring_or_char_list) do
+    bitstring_or_char_list |> decode() |> case do
       {:ok, value} -> value
       {:error, {:unexpected_token, tok}} ->
         Logger.debug("#{__MODULE__}.decode!(#{inspect bitstring_or_char_list}} unexpected token #{tok}")
