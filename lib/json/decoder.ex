@@ -46,21 +46,27 @@ defmodule JSON.Decoder.DefaultImplementations do
              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} failed with errror: #{inspect error_info}")
              {:error, error_info}
            {:ok, value, rest} ->
-             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) trimming remainder of JSON payload #{inspect rest}...")
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) processing value = #{inspect value}, rest = #{inspect rest}")
              rest |> String.trim() |> case do
                <<>> ->
-                 Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) successfully trimmed remainder JSON payload!")
                  Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) returning {:ok. #{inspect value}}")
                  {:ok, value}
-               rest ->
-                 Logger.error("#{__MODULE__}.decode(#{inspect bitstring}} failed consume entire buffer: #{rest}")
-                 {:error, {:unexpected_token, rest}}
+               tok ->
+                 Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} failed consume entire buffer: #{tok}")
+                 {:error, {:unexpected_token, tok}}
              end
            stream = %Stream{} ->
              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} received stream #{inspect stream}")
              run = Enum.to_list(stream)
              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} run result = #{inspect(run)}")
 
+             err = {:error, :stream_not_implemented}
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) returning #{inspect err}")
+             err
+           func when is_function(func) ->
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} received func #{inspect func}")
+             run = Stream.run(func)
+             Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}} run result = #{inspect(run)}")
              err = {:error, :stream_not_implemented}
              Logger.debug("#{__MODULE__}.decode(#{inspect bitstring}) returning #{inspect err}")
              err
