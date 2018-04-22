@@ -110,7 +110,7 @@ defmodule JSONDecodeTest do
                        3
                      ]
       }",
-      %{"foo" => [1,2,3]}
+      %{"foo" => [1, 2 , 3]}
     )
 
     decodes(
@@ -218,7 +218,7 @@ defmodule JSONDecodeTest do
     ])
 
     decodes("simple object string keys" , '{"foo" : 123}', %{"foo" => 123})
-    decodes("simple object containing array" , '{"foo" : [1,2,3]}', %{"foo" => [1,2,3,]})
+    decodes("simple object containing array" , '{"foo" : [1,2,3]}', %{"foo" => [1, 2, 3, ]})
     decodes("simple object containing big array" ,
       '{
            "foo" : [
